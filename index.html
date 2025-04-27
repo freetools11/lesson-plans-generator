@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punjab Textbook Board Lesson Plan Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .ad-space {
+            background-color: #f0f0f0;
+            padding: 15px;
+            text-align: center;
+            border: 1px dashed #ccc;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1a5276;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #3498db;
+        }
+        .lesson-plan-output {
+            margin-top: 40px;
+            display: none;
+        }
+        .output-section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .activity-table th, .activity-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .activity-table th {
+            background-color: #f2f2f2;
+        }
+        .special-requirements {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .print-btn {
+            background-color: #27ae60;
+            margin-left: 10px;
+        }
+        .print-btn:hover {
+            background-color: #2ecc71;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: #2c3e50;
+            color: white;
+        }
+        footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        @media print {
+            button, .form-container, .ad-space, footer {
+                display: none;
+            }
+            .lesson-plan-output {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ad-space">
+        <p>Advertisement Space</p>
+    </div>
+    
+    <div class="container">
+        <h1>Punjab Textbook Board Lesson Plan Generator</h1>
+        
+        <div class="form-container">
+            <div class="form-group">
+                <label for="classLevel">Class Level (3-8):</label>
+                <select id="classLevel" required onchange="updateChapters()">
+                    <option value="">Select Class</option>
+                    <option value="3">Class 3</option>
+                    <option value="4">Class 4</option>
+                    <option value="5">Class 5</option>
+                    <option value="6">Class 6</option>
+                    <option value="7">Class 7</option>
+                    <option value="8">Class 8</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="subject">Subject:</label>
+                <select id="subject" required onchange="updateChapters()">
+                    <option value="">Select Subject</option>
+                    <option value="Math">Mathematics</option>
+                    <option value="Science">Science</option>
+                    <option value="Urdu">Urdu</option>
+                    <option value="English">English</option>
+                    <option value="Social Studies">Social Studies</option>
+                    <option value="Islamiat">Islamiat</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="chapterTopic">Chapter:</label>
+                <select id="chapterTopic" required>
+                    <option value="">Select Chapter</option>
+                    <!-- Chapters will be populated dynamically -->
+                </select>
+            </div>
+            
+            <button id="generateBtn">Generate Lesson Plan</button>
+        </div>
+        
+        <div id="lessonPlanOutput" class="lesson-plan-output">
+            <h2 id="lessonTitle"></h2>
+            <p><strong>Grade Level:</strong> <span id="gradeLevel"></span></p>
+            <p><strong>Duration:</strong> 40-45 minutes</p>
+            <p><strong>Curriculum:</strong> Punjab Textbook Board (Pakistan)</p>
+            <p><strong>Alignment:</strong> Single National Curriculum (SNC) & Punjab Examination Commission (PEC)</p>
+            
+            <div class="output-section">
+                <h3>Learning Objectives</h3>
+                <ol id="learningObjectives"></ol>
+            </div>
+            
+            <div class="output-section">
+                <h3>Resources Needed</h3>
+                <p><strong>Textbook Pages:</strong> <span id="textbookPages"></span></p>
+                <p><strong>Supplementary Materials:</strong></p>
+                <ul id="supplementaryMaterials"></ul>
+                <p><strong>Visual Aids:</strong></p>
+                <ul id="visualAids"></ul>
+            </div>
+            
+            <div class="output-section">
+                <h3>Lesson Flow</h3>
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Activity</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lessonFlow">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="output-section">
+                <h3>Assessment</h3>
+                <p><strong>Formative:</strong> <span id="formativeAssessment"></span></p>
+                <p><strong>Summative:</strong> <span id="summativeAssessment"></span></p>
+            </div>
+            
+            <div class="output-section">
+                <h3>Differentiation</h3>
+                <p><strong>Support:</strong> <span id="supportStrategies"></span></p>
+                <p><strong>Challenge:</strong> <span id="challengeStrategies"></span></p>
+            </div>
+            
+            <div class="output-section">
+                <h3>Homework</h3>
+                <p><strong>Textbook Exercise:</strong> <span id="textbookExercise"></span></p>
+                <p><strong>Creative Extension:</strong> <span id="creativeExtension"></span></p>
+            </div>
+            
+            <div class="special-requirements">
+                <h3>Special Requirements</h3>
+                <p><strong>Critical Thinking Question:</strong> <span id="criticalThinkingQuestion"></span></p>
+                <p><strong>Cross-Curricular Link:</strong> <span id="crossCurricularLink"></span></p>
+                <p><strong>Local Context (Punjab):</strong> <span id="localContext"></span></p>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <button id="printBtn" class="print-btn">Print Lesson Plan</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ad-space">
+        <p>Advertisement Space</p>
+    </div>
+
+    <footer>
+        <p>© 2023 Punjab Textbook Board Lesson Plan Generator | 
+           <a href="https://www.freetoeurope.com/" target="_blank">Visit our main site</a>
+        </p>
+    </footer>
+
+    <script>
+        // Complete Punjab Textbook Chapters Database (Official Curriculum)
+        const textbookChapters = {
+            "3": {
+                "Math": [
+                    "Chapter 1: Whole Numbers",
+                    "Chapter 2: Number Operations",
+                    "Chapter 3: Fractions",
+                    "Chapter 4: Measurement",
+                    "Chapter 5: Geometry",
+                    "Chapter 6: Time",
+                    "Chapter 7: Money",
+                    "Chapter 8: Data Handling"
+                ],
+                "Science": [
+                    "Chapter 1: Characteristics of Living Things",
+                    "Chapter 2: The Human Body",
+                    "Chapter 3: Animals and Plants",
+                    "Chapter 4: Matter and Materials",
+                    "Chapter 5: Energy and Forces",
+                    "Chapter 6: Earth and Space",
+                    "Chapter 7: Environment"
+                ],
+                "Urdu": [
+                    "Chapter 1: Hamd o Naat",
+                    "Chapter 2: Ikhlaqiat",
+                    "Chapter 3: Punjab ki Lok Kahaniyan",
+                    "Chapter 4: Mera Pyara Watan",
+                    "Chapter 5: Sehat o Safai",
+                    "Chapter 6: Achay Aadaab",
+                    "Chapter 7: Fun aur Taleem",
+                    "Chapter 8: Qaumi Ittehad"
+                ],
+                "English": [
+                    "Chapter 1: People Around Us",
+                    "Chapter 2: Caring for Others",
+                    "Chapter 3: The World Around Us",
+                    "Chapter 4: Travel and Transport",
+                    "Chapter 5: Games We Play",
+                    "Chapter 6: Our Country",
+                    "Chapter 7: Festivals",
+                    "Chapter 8: Stories"
+                ],
+                "Social Studies": [
+                    "Chapter 1: Our Country Pakistan",
+                    "Chapter 2: Our Culture",
+                    "Chapter 3: Our Rights and Responsibilities",
+                    "Chapter 4: Our Earth",
+                    "Chapter 5: Our Resources",
+                    "Chapter 6: Our History",
+                    "Chapter 7: Our Government"
+                ],
+                "Islamiat": [
+                    "Chapter 1: Quran Majeed ki Ahmiat",
+                    "Chapter 2: Imaniyat aur Ibadat",
+                    "Chapter 3: Akhlaq o Aadaab",
+                    "Chapter 4: Seerat-un-Nabi (SAW)",
+                    "Chapter 5: Islamic Tareekh kay Aham Waqiat",
+                    "Chapter 6: Islami Taleemat aur Zindagi"
+                ]
+            },
+            "4": {
+                "Math": [
+                    "Chapter 1: Whole Numbers and Operations",
+                    "Chapter 2: Factors and Multiples",
+                    "Chapter 3: Fractions",
+                    "Chapter 4: Decimals",
+                    "Chapter 5: Measurement",
+                    "Chapter 6: Geometry",
+                    "Chapter 7: Time and Calendar",
+                    "Chapter 8: Data Handling"
+                ],
+                "Science": [
+                    "Chapter 1: Characteristics and Life Processes of Organisms",
+                    "Chapter 2: Human Health",
+                    "Chapter 3: Matter and Its States",
+                    "Chapter 4: Force and Motion",
+                    "Chapter 5: Electricity and Magnetism",
+                    "Chapter 6: Earth and Its Resources",
+                    "Chapter 7: Weather and Climate"
+                ],
+                "Urdu": [
+                    "Chapter 1: Hamd o Naat",
+                    "Chapter 2: Ikhlaqiat",
+                    "Chapter 3: Punjab ki Saqafat",
+                    "Chapter 4: Qaumi Ittehad",
+                    "Chapter 5: Science ki Dunya",
+                    "Chapter 6: Mashriqi Tamaddun",
+                    "Chapter 7: Fun aur Adab",
+                    "Chapter 8: Tareekhi Shakhsiyat"
+                ],
+                "English": [
+                    "Chapter 1: Respect",
+                    "Chapter 2: Good Citizens",
+                    "Chapter 3: The Natural World",
+                    "Chapter 4: Communication",
+                    "Chapter 5: Sports and Health",
+                    "Chapter 6: Our Country",
+                    "Chapter 7: Festivals and Celebrations",
+                    "Chapter 8: Stories and Poems"
+                ],
+                "Social Studies": [
+                    "Chapter 1: Pakistan - Our Homeland",
+                    "Chapter 2: Culture and Heritage",
+                    "Chapter 3: Rights and Responsibilities",
+                    "Chapter 4: Geography of Pakistan",
+                    "Chapter 5: Natural Resources",
+                    "Chapter 6: Historical Places",
+                    "Chapter 7: Government System"
+                ],
+                "Islamiat": [
+                    "Chapter 1: Quran Majeed ki Taleemat",
+                    "Chapter 2: Iman aur Ibadat",
+                    "Chapter 3: Akhlaqiat",
+                    "Chapter 4: Seerat-un-Nabi (SAW)",
+                    "Chapter 5: Islamic Tareekh",
+                    "Chapter 6: Islami Zindagi"
+                ]
+            },
+            "5": {
+                "Math": [
+                    "Chapter 1: Whole Numbers and Operations",
+                    "Chapter 2: HCF and LCM",
+                    "Chapter 3: Fractions",
+                    "Chapter 4: Decimals",
+                    "Chapter 5: Percentage",
+                    "Chapter 6: Geometry",
+                    "Chapter 7: Perimeter, Area and Volume",
+                    "Chapter 8: Data Handling"
+                ],
+                "Science": [
+                    "Chapter 1: Classification of Living Things",
+                    "Chapter 2: Human Body Systems",
+                    "Chapter 3: Plants and Photosynthesis",
+                    "Chapter 4: Matter and Its Changes",
+                    "Chapter 5: Energy and Its Forms",
+                    "Chapter 6: Force and Machines",
+                    "Chapter 7: Earth and Space"
+                ],
+                "Urdu": [
+                    "Chapter 1: Hamd o Naat",
+                    "Chapter 2: Ikhlaqiat",
+                    "Chapter 3: Qaumi Ittehad",
+                    "Chapter 4: Science aur Technology",
+                    "Chapter 5: Tareekh o Saqafat",
+                    "Chapter 6: Adab o Fun",
+                    "Chapter 7: Seerat-un-Nabi (SAW)",
+                    "Chapter 8: Islami Taleemat"
+                ],
+                "English": [
+                    "Chapter 1: Patriotism",
+                    "Chapter 2: Role Models",
+                    "Chapter 3: The Environment",
+                    "Chapter 4: Technology",
+                    "Chapter 5: Health and Hygiene",
+                    "Chapter 6: Our Country",
+                    "Chapter 7: Festivals Around the World",
+                    "Chapter 8: Literature"
+                ],
+                "Social Studies": [
+                    "Chapter 1: Pakistan - Land and People",
+                    "Chapter 2: Cultural Diversity",
+                    "Chapter 3: Citizenship",
+                    "Chapter 4: Physical Features",
+                    "Chapter 5: Economic Activities",
+                    "Chapter 6: Historical Events",
+                    "Chapter 7: Political System"
+                ],
+                "Islamiat": [
+                    "Chapter 1: Quran Majeed aur Us ki Taleemat",
+                    "Chapter 2: Iman aur Ibadat",
+                    "Chapter 3: Akhlaq o Aadaab",
+                    "Chapter 4: Seerat-un-Nabi (SAW)",
+                    "Chapter 5: Islamic Civilization",
+                    "Chapter 6: Contemporary Issues"
+                ]
+            },
+            "6": {
+                "Math": [
+                    "Chapter 1: Sets",
+                    "Chapter 2: Whole Numbers",
+                    "Chapter 3: Factors and Multiples",
+                    "Chapter 4: Integers",
+                    "Chapter 5: Fractions",
+                    "Chapter 6: Decimals",
+                    "Chapter 7: Ratio and Proportion",
+                    "Chapter 8: Geometry",
+                    "Chapter 9: Perimeter and Area",
+                    "Chapter 10: Data Handling"
+                ],
+                "Science": [
+                    "Chapter 1: Cellular Organization",
+                    "Chapter 2: Human Digestive System",
+                    "Chapter 3: Plant Systems",
+                    "Chapter 4: Environment and Interactions",
+                    "Chapter 5: Atoms and Molecules",
+                    "Chapter 6: Energy and Its Forms",
+                    "Chapter 7: Force and Motion",
+                    "Chapter 8: Electricity",
+                    "Chapter 9: Space and Satellites"
+                ],
+                "Urdu": [
+                    "Chapter 1: Hamd o Naat",
+                    "Chapter 2: Ikhlaqiat",
+                    "Chapter 3: Qaumi Ittehad",
+                    "Chapter 4: Science aur Technology",
+                    "Chapter 5: Tareekh o Saqafat",
+                    "Chapter 6: Adab o Fun",
+                    "Chapter 7: Seerat-un-Nabi (SAW)",
+                    "Chapter 8: Islami Taleemat"
+                ],
+                "English": [
+                    "Chapter 1: Tolerance",
+                    "Chapter 2: Peaceful Coexistence",
+                    "Chapter 3: Biodiversity",
+                    "Chapter 4: Communication Technology",
+                    "Chapter 5: Healthy Lifestyle",
+                    "Chapter 6: National Identity",
+                    "Chapter 7: Cultural Heritage",
+                    "Chapter 8: Literary Genres"
+                ],
+                "Social Studies": [
+                    "Chapter 1: Pakistan - Geographical Features",
+                    "Chapter 2: Cultural Heritage",
+                    "Chapter 3: Citizenship Rights",
+                    "Chapter 4: Climate and Environment",
+                    "Chapter 5: Economic Resources",
+                    "Chapter 6: Historical Developments",
+                    "Chapter 7: Government Structure"
+                ],
+                "Islamiat": [
+                    "Chapter 1: Quran Majeed - Selected Surahs",
+                    "Chapter 2: Articles of Faith",
+                    "Chapter 3: Islamic Worship",
+                    "Chapter 4: Seerah of Prophet Muhammad (PBUH)",
+                    "Chapter 5: Islamic History",
+                    "Chapter 6: Social System in Islam"
+                ]
+            },
+            "7": {
+                "Math": [
+                    "Chapter 1: Sets",
+                    "Chapter 2: Rational Numbers",
+                    "Chapter 3: Decimals",
+                    "Chapter 4: Exponents",
+                    "Chapter 5: Square Root",
+                    "Chapter 6: Ratio and Proportion",
+                    "Chapter 7: Financial Arithmetic",
+                    "Chapter 8: Algebraic Expressions",
+                    "Chapter 9: Linear Equations",
+                    "Chapter 10: Geometry",
+                    "Chapter 11: Perimeter and Area",
+                    "Chapter 12: Data Handling"
+                ],
+                "Science": [
+                    "Chapter 1: Human Organ Systems",
+                    "Chapter 2: Plant Systems",
+                    "Chapter 3: Elements and Compounds",
+                    "Chapter 4: Mixtures and Solutions",
+                    "Chapter 5: Force and Motion",
+                    "Chapter 6: Energy and Heat",
+                    "Chapter 7: Sound and Light",
+                    "Chapter 8: Electricity and Magnetism",
+                    "Chapter 9: Earth and Space"
+                ],
+                "Urdu": [
+                    "Chapter 1: Hamd o Naat",
+                    "Chapter 2: Ikhlaqiat",
+                    "Chapter 3: Qaumi Ittehad",
+                    "Chapter 4: Science aur Technology",
+                    "Chapter 5: Tareekh o Saqafat",
+                    "Chapter 6: Adab o Fun",
+                    "Chapter 7: Seerat-un-Nabi (SAW)",
+                    "Chapter 8: Islami Taleemat"
+                ],
+                "English": [
+                    "Chapter 1: National Integration",
+                    "Chapter 2: Character Building",
+                    "Chapter 3: Environmental Conservation",
+                    "Chapter 4: Media and Technology",
+                    "Chapter 5: Health and Fitness",
+                    "Chapter 6: National Pride",
+                    "Chapter 7: World Cultures",
+                    "Chapter 8: Literary Appreciation"
+                ],
+                "Social Studies": [
+                    "Chapter 1: Pakistan - Physical Environment",
+                    "Chapter 2: Cultural Diversity",
+                    "Chapter 3: Citizenship and Rights",
+                    "Chapter 4: Climate Change",
+                    "Chapter 5: Economic Development",
+                    "Chapter 6: Historical Perspectives",
+                    "Chapter 7: Political System"
+                ],
+                "Islamiat": [
+                    "Chapter 1: Quranic Teachings",
+                    "Chapter 2: Faith and Beliefs",
+                    "Chapter 3: Islamic Practices",
+                    "Chapter 4: Life of Prophet Muhammad (PBUH)",
+                    "Chapter 5: Islamic Civilization",
+                    "Chapter 6: Social Values in Islam"
+                ]
+            },
+            "8": {
+                "Math": [
+                    "Chapter 1: Operations on Sets",
+                    "Chapter 2: Real Numbers",
+                    "Chapter 3: Number Systems",
+                    "Chapter 4: Financial Arithmetic",
+                    "Chapter 5: Polynomials",
+                    "Chapter 6: Factorization",
+                    "Chapter 7: Fundamentals of Geometry",
+                    "Chapter 8: Practical Geometry",
+                    "Chapter 9: Areas and Volumes",
+                    "Chapter 10: Demonstrative Geometry",
+                    "Chapter 11: Introduction to Trigonometry",
+                    "Chapter 12: Information Handling"
+                ],
+                "Science": [
+                    "Chapter 1: Biotechnology",
+                    "Chapter 2: Human Nervous System",
+                    "Chapter 3: Reproduction in Plants",
+                    "Chapter 4: Periodic Table",
+                    "Chapter 5: Chemical Reactions",
+                    "Chapter 6: Acids, Bases and Salts",
+                    "Chapter 7: Force and Pressure",
+                    "Chapter 8: Electricity and Magnetism",
+                    "Chapter 9: Light and Optics",
+                    "Chapter 10: Environmental Science"
+                ],
+                "Urdu": [
+                    "Chapter 1: Hamd o Naat",
+                    "Chapter 2: Ikhlaqiat",
+                    "Chapter 3: Qaumi Ittehad",
+                    "Chapter 4: Science aur Technology",
+                    "Chapter 5: Tareekh o Saqafat",
+                    "Chapter 6: Adab o Fun",
+                    "Chapter 7: Seerat-un-Nabi (SAW)",
+                    "Chapter 8: Islami Taleemat"
+                ],
+                "English": [
+                    "Chapter 1: Global Citizenship",
+                    "Chapter 2: Ethical Values",
+                    "Chapter 3: Sustainable Development",
+                    "Chapter 4: Digital Age",
+                    "Chapter 5: Public Health",
+                    "Chapter 6: National Identity",
+                    "Chapter 7: World Heritage",
+                    "Chapter 8: Literary Analysis"
+                ],
+                "Social Studies": [
+                    "Chapter 1: Pakistan - Geographical Importance",
+                    "Chapter 2: Cultural Heritage",
+                    "Chapter 3: Constitutional Rights",
+                    "Chapter 4: Environmental Issues",
+                    "Chapter 5: Economic Challenges",
+                    "Chapter 6: Historical Analysis",
+                    "Chapter 7: Government and Politics"
+                ],
+                "Islamiat": [
+                    "Chapter 1: Quranic Exegesis",
+                    "Chapter 2: Islamic Beliefs",
+                    "Chapter 3: Worship in Islam",
+                    "Chapter 4: Life of the Prophet (PBUH)",
+                    "Chapter 5: Islamic History",
+                    "Chapter 6: Social System of Islam"
+                ]
+            }
+        };
+
+        // Update chapters dropdown based on class and subject selection
+        function updateChapters() {
+            const classLevel = document.getElementById('classLevel').value;
+            const subject = document.getElementById('subject').value;
+            const chapterDropdown = document.getElementById('chapterTopic');
+            
+            chapterDropdown.innerHTML = '<option value="">Select Chapter</option>';
+            
+            if (classLevel && subject && textbookChapters[classLevel] && textbookChapters[classLevel][subject]) {
+                textbookChapters[classLevel][subject].forEach(chapter => {
+                    const option = document.createElement('option');
+                    option.value = chapter;
+                    option.textContent = chapter;
+                    chapterDropdown.appendChild(option);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const bloomsVerbs = {
+                remember: ["list", "identify", "define"],
+                understand: ["describe", "explain", "summarize"],
+                apply: ["solve", "use", "demonstrate"],
+                analyze: ["compare", "contrast", "differentiate"],
+                evaluate: ["assess", "justify", "defend"],
+                create: ["design", "construct", "develop"]
+            };
+            
+            const sncCompetencies = {
+                CT: "Critical Thinking",
+                CR: "Creativity",
+                CL: "Collaboration",
+                CM: "Communication"
+            };
+            
+            const crossSubjects = {
+                Math: "Urdu measurements in poetry",
+                Science: "Geography (climate impact)",
+                Urdu: "History (literary context)",
+                English: "Local storytelling traditions",
+                "Social Studies": "Economics (local industries)",
+                Islamiat: "Ethical values in daily life"
+            };
+            
+            const localContexts = {
+                Math: "agricultural data from Punjab",
+                Science: "local ecosystems of Punjab",
+                Urdu: "Punjabi folktales and poetry",
+                English: "local proverbs and sayings",
+                "Social Studies": "historical sites of Punjab",
+                Islamiat: "local Islamic heritage sites"
+            };
+
+            // Subject-specific resources
+            const subjectResources = {
+                Math: ["Geometric tools", "Abacus", "Local market price lists", "Measuring instruments"],
+                Science: ["Magnifying glasses", "Local plant specimens", "Weather charts of Punjab", "Science kits"],
+                Urdu: ["Punjabi poetry books", "Calligraphy materials", "Local folk stories", "Newspapers"],
+                English: ["Picture dictionaries", "Local English newspapers", "Story cards", "Audio recordings"],
+                "Social Studies": ["Maps of Punjab", "Historical photographs", "Census data", "Artifacts"],
+                Islamiat: ["Quran with translation", "Hadith books", "Local mosque architecture examples", "Islamic art"]
+            };
+
+            // Subject-specific visual aids
+            const visualAids = {
+                Math: ["Fraction circles", "Geometric shapes", "Local market measurement tools", "Graphs"],
+                Science: ["Diagrams of local plants/animals", "Weather maps of Punjab", "Science experiment videos", "Models"],
+                Urdu: ["Punjabi calligraphy samples", "Story sequence cards", "Poetry posters", "Timelines"],
+                English: ["Word walls", "Sentence strips", "Local signage examples", "Picture cards"],
+                "Social Studies": ["Timelines of Punjab history", "Maps of ancient Punjab", "Cultural artifact replicas", "Charts"],
+                Islamiat: ["Prayer position charts", "Hajj diagrams", "Photos of local Islamic architecture", "Islamic calendars"]
+            };
+            
+            // Detailed lecture content for 15-minute direct instruction
+            const lectureContent = {
+                "Science": {
+                    "3": {
+                        "Characteristics of Living Things": "Explain the 7 characteristics of living things (movement, respiration, sensitivity, growth, reproduction, excretion, nutrition). Compare plants and animals. Show examples from Punjab's ecosystem.",
+                        "The Human Body": "Introduce major body parts and their functions. Focus on Punjab-specific health considerations (e.g., nutrition in rural vs urban areas).",
+                        "Animals and Plants": "Classify local Punjab animals and plants. Discuss adaptations to Punjab's climate."
+                    },
+                    "4": {
+                        "Characteristics and Life Processes of Organisms": "Explain life processes (nutrition, respiration, etc.) with Punjab examples like rice plants and buffalo.",
+                        "Human Health": "Discuss balanced diet using Punjab food examples. Explain common Punjab health issues.",
+                        "Matter and Its States": "Teach three states of matter with Punjab examples (water in canals, steam in kitchens, ice in winters)."
+                    },
+                    "5": {
+                        "Classification of Living Things": "Explain 5-kingdom system. Focus on Punjab examples in each kingdom (e.g., Punjab's agricultural plants, local animals).",
+                        "Human Body Systems": "Teach digestive, respiratory, circulatory systems. Compare with Punjab livestock systems.",
+                        "Plants and Photosynthesis": "Explain photosynthesis process using Punjab crops (wheat, rice) as examples."
+                    },
+                    "6": {
+                        "Cellular Organization": "Teach cell structure. Compare plant/animal cells using Punjab examples (onion cells, cheek cells).",
+                        "Human Digestive System": "Explain digestion process. Discuss traditional Punjab foods and digestion.",
+                        "Plant Systems": "Teach root, stem, leaf functions using Punjab crops as examples."
+                    },
+                    "7": {
+                        "Human Organ Systems": "Detail 7 major systems. Discuss Punjab health statistics related to each system.",
+                        "Plant Systems": "Explain transport in plants using Punjab trees as examples.",
+                        "Elements and Compounds": "Teach periodic table basics. Discuss elements found in Punjab's soil/water."
+                    },
+                    "8": {
+                        "Biotechnology": "Introduce biotechnology applications in Punjab agriculture.",
+                        "Human Nervous System": "Explain CNS and PNS. Discuss reflexes using Punjab cultural examples.",
+                        "Reproduction in Plants": "Teach pollination types. Show Punjab crop pollination methods."
+                    }
+                },
+                "Math": {
+                    "3": {
+                        "Whole Numbers": "Teach place value up to 4 digits using Punjab population statistics.",
+                        "Fractions": "Introduce fractions using Punjab food division examples (roti, lassi).",
+                        "Measurement": "Teach length, weight with Punjab market examples (meter, kilogram)."
+                    },
+                    "4": {
+                        "Whole Numbers and Operations": "Review place value to 6 digits with Punjab geography numbers.",
+                        "Fractions": "Compare fractions using land division examples from Punjab agriculture.",
+                        "Decimals": "Introduce decimals with money examples from Punjab markets."
+                    },
+                    "5": {
+                        "Whole Numbers and Operations": "Teach operations with large numbers using Punjab census data.",
+                        "HCF and LCM": "Explain concepts using grouping examples from Punjab farming.",
+                        "Percentage": "Teach % using Punjab weather statistics (rainfall percentages)."
+                    },
+                    "6": {
+                        "Sets": "Introduce sets using Punjab population groups (farmers, students etc).",
+                        "Integers": "Teach positive/negative numbers with Punjab temperature examples.",
+                        "Ratio and Proportion": "Explain using Punjab crop yield ratios."
+                    },
+                    "7": {
+                        "Rational Numbers": "Teach rational numbers with Punjab land measurement examples.",
+                        "Financial Arithmetic": "Explain profit/loss using Punjab small business scenarios.",
+                        "Algebraic Expressions": "Introduce variables with Punjab farming equations."
+                    },
+                    "8": {
+                        "Real Numbers": "Classify numbers with Punjab statistical examples.",
+                        "Polynomials": "Teach polynomial operations with area calculation examples.",
+                        "Trigonometry": "Introduce basics using Punjab architecture examples."
+                    }
+                },
+                "Urdu": {
+                    "3": {
+                        "Hamd o Naat": "حمد کی تعریف، مقبول حمدوں کی مثالیں (حفیظ جالندھری)، پنجاب کے حمد گو شعرا",
+                        "Ikhlaqiat": "اخلاقی اقدار کی اہمیت، پنجاب کی ثقافتی روایات",
+                        "Punjab ki Lok Kahaniyan": "پنجاب کی مقبول لوک کہانیوں کا تجزیہ"
+                    },
+                    "4": {
+                        "Hamd o Naat": "نعت کی تعریف، پنجاب کے نعتیہ شعرا کا تعارف",
+                        "Ikhlaqiat": "معاشرتی اخلاقیات، پنجاب کے رسم و رواج",
+                        "Punjab ki Saqafat": "پنجاب کی ثقافت، تہوار، رہن سہن"
+                    },
+                    "5": {
+                        "Hamd o Naat": "حمد و نعت کی صنف، پنجاب کے صوفی شعرا کا کلام",
+                        "Ikhlaqiat": "اخلاقیات کے اسلامی اصول، پنجاب میں ان کا اطلاق",
+                        "Qaumi Ittehad": "قومی یکجہتی میں پنجاب کا کردار"
+                    },
+                    "6": {
+                        "Hamd o Naat": "حمد و نعت کی ادبی اہمیت، پنجابی زبان میں حمدیہ کلام",
+                        "Ikhlaqiat": "اخلاقی اقدار کا معاشرتی کردار، پنجاب کی مثالیں",
+                        "Qaumi Ittehad": "پنجاب کی قومی یکجہتی میں خدمات"
+                    },
+                    "7": {
+                        "Hamd o Naat": "حمد و نعت کی تنقیدی تشریح، پنجاب کے حمد گو شعرا",
+                        "Ikhlaqiat": "اخلاقیات کا تقابلی جائزہ، پنجاب کی روایات",
+                        "Qaumi Ittehad": "پنجاب کی تاریخ میں اتحاد کے واقعات"
+                    },
+                    "8": {
+                        "Hamd o Naat": "حمد و نعت کی فنی خصوصیات، پنجاب کے نمائندہ شعرا",
+                        "Ikhlaqiat": "عصری چیلنجز اور اخلاقیات، پنجاب کے تناظر میں",
+                        "Qaumi Ittehad": "پاکستانی قومیت اور پنجاب کا کردار"
+                    }
+                },
+                "English": {
+                    "3": {
+                        "People Around Us": "Describe family roles using Punjab family structures.",
+                        "Caring for Others": "Discuss community care in Punjab villages.",
+                        "The World Around Us": "Teach vocabulary using Punjab landmarks."
+                    },
+                    "4": {
+                        "Respect": "Discuss respect in Punjab cultural context.",
+                        "Good Citizens": "Explain citizenship using Punjab examples.",
+                        "The Natural World": "Teach nature vocabulary with Punjab ecosystem."
+                    },
+                    "5": {
+                        "Patriotism": "Discuss patriotism with Punjab's role in Pakistan.",
+                        "Role Models": "Introduce Punjab's historical figures as role models.",
+                        "The Environment": "Teach environmental issues specific to Punjab."
+                    },
+                    "6": {
+                        "Tolerance": "Discuss religious tolerance in Punjab history.",
+                        "Peaceful Coexistence": "Teach coexistence using Punjab communities.",
+                        "Biodiversity": "Explain biodiversity with Punjab wildlife examples."
+                    },
+                    "7": {
+                        "National Integration": "Discuss Punjab's role in national integration.",
+                        "Character Building": "Teach values using Punjab cultural examples.",
+                        "Environmental Conservation": "Explain conservation efforts in Punjab."
+                    },
+                    "8": {
+                        "Global Citizenship": "Discuss Punjab diaspora as global citizens.",
+                        "Ethical Values": "Teach ethics using Punjab cultural narratives.",
+                        "Sustainable Development": "Explain SDGs with Punjab development projects."
+                    }
+                },
+                "Social Studies": {
+                    "3": {
+                        "Our Country Pakistan": "Teach Pakistan's map focusing on Punjab's location.",
+                        "Our Culture": "Discuss Punjab's cultural diversity.",
+                        "Our Rights and Responsibilities": "Explain using Punjab community examples."
+                    },
+                    "4": {
+                        "Pakistan - Our Homeland": "Detail Punjab's geographical features.",
+                        "Culture and Heritage": "Teach Punjab's UNESCO heritage sites.",
+                        "Rights and Responsibilities": "Discuss in Punjab's social context."
+                    },
+                    "5": {
+                        "Pakistan - Land and People": "Explain demographics with Punjab statistics.",
+                        "Cultural Diversity": "Discuss Punjab's regional diversity.",
+                        "Citizenship": "Teach using Punjab's civic participation examples."
+                    },
+                    "6": {
+                        "Pakistan - Geographical Features": "Detail Punjab's rivers, plains, climate.",
+                        "Cultural Heritage": "Teach Punjab's intangible cultural heritage.",
+                        "Citizenship Rights": "Discuss in context of Punjab's legal cases."
+                    },
+                    "7": {
+                        "Pakistan - Physical Environment": "Explain Punjab's environmental challenges.",
+                        "Cultural Diversity": "Discuss Punjab's religious diversity.",
+                        "Citizenship and Rights": "Teach using Punjab's social movements."
+                    },
+                    "8": {
+                        "Pakistan - Geographical Importance": "Detail Punjab's strategic importance.",
+                        "Cultural Heritage": "Discuss threats to Punjab's heritage.",
+                        "Constitutional Rights": "Explain using Punjab's legal history."
+                    }
+                },
+                "Islamiat": {
+                    "3": {
+                        "Quran Majeed ki Ahmiat": "قرآن کی اہمیت، پنجاب میں قرآن کی تعلیم کی روایت",
+                        "Imaniyat aur Ibadat": "ایمانیات اور عبادات، پنجاب کے مذہبی رواج",
+                        "Akhlaq o Aadaab": "اخلاقیات، پنجاب کی اسلامی اخلاقی روایات"
+                    },
+                    "4": {
+                        "Quran Majeed ki Taleemat": "قرآن کی بنیادی تعلیمات، پنجاب میں ان کا نفاذ",
+                        "Iman aur Ibadat": "ایمان اور عبادت، پنجاب کے مسلمانوں کا طریقہ",
+                        "Akhlaqiat": "اخلاقیات، پنجاب کے صوفیاء کی تعلیمات"
+                    },
+                    "5": {
+                        "Quran Majeed aur Us ki Taleemat": "قرآن کی تعلیمات، پنجاب میں ان کی عملی مثالیں",
+                        "Iman aur Ibadat": "ایمانیات، پنجاب کے اسلامی مراکز کا کردار",
+                        "Akhlaq o Aadaab": "اخلاق، پنجاب کے اسلامی تعلیمی اداروں کا کردار"
+                    },
+                    "6": {
+                        "Quran Majeed - Selected Surahs": "سورتوں کی تفسیر، پنجاب کے علماء کی تشریحات",
+                        "Articles of Faith": "ایمانیات، پنجاب میں ان کا اظہار",
+                        "Islamic Worship": "عبادات، پنجاب کے مخصوص طریقے"
+                    },
+                    "7": {
+                        "Quranic Teachings": "قرآنی تعلیمات، پنجاب میں ان کی تشریح",
+                        "Faith and Beliefs": "ایمانیات، پنجاب کے مختلف مکاتب فکر",
+                        "Islamic Practices": "عبادات، پنجاب کے مخصوص رسومات"
+                    },
+                    "8": {
+                        "Quranic Exegesis": "تفسیر قرآن، پنجاب کے مفسرین کا کردار",
+                        "Islamic Beliefs": "عقائد، پنجاب میں ان کا اظہار",
+                        "Worship in Islam": "عبادات، پنجاب کی مساجد کا کردار"
+                    }
+                }
+            };
+            
+            document.getElementById('generateBtn').addEventListener('click', generateLessonPlan);
+            document.getElementById('printBtn').addEventListener('click', printLessonPlan);
+            
+            function generateLessonPlan() {
+                const classLevel = document.getElementById('classLevel').value;
+                const subject = document.getElementById('subject').value;
+                const chapterTopic = document.getElementById('chapterTopic').value;
+                
+                if (!classLevel || !subject || !chapterTopic) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                // Extract chapter number and topic
+                const chapterMatch = chapterTopic.match(/Chapter (\d+): (.+)/);
+                const chapterNum = chapterMatch ? chapterMatch[1] : "1";
+                const topic = chapterMatch ? chapterMatch[2] : chapterTopic;
+                
+                // Set basic info
+                document.getElementById('lessonTitle').textContent = `${topic} - Punjab Textbook Board Lesson Plan`;
+                document.getElementById('gradeLevel').textContent = `Class ${classLevel}`;
+                
+                // Learning objectives
+                const objectivesList = document.getElementById('learningObjectives');
+                objectivesList.innerHTML = '';
+                
+                const objectives = [
+                    `Students will be able to ${bloomsVerbs.understand[1]} the concept of ${topic} (SNC: ${sncCompetencies.CM}-1)`,
+                    `Students will ${bloomsVerbs.apply[0]} knowledge of ${topic} to solve problems relevant to Punjab context (SNC: ${sncCompetencies.CT}-2)`,
+                    `Students will ${bloomsVerbs.analyze[0]} different aspects of ${topic} through local examples (SNC: ${sncCompetencies.CL}-1)`,
+                    `Students will ${bloomsVerbs.create[1]} a project demonstrating ${topic} in Punjab's context (SNC: ${sncCompetencies.CR}-3)`
+                ];
+                
+                objectives.forEach(obj => {
+                    const li = document.createElement('li');
+                    li.textContent = obj;
+                    objectivesList.appendChild(li);
+                });
+                
+                // Resources needed
+                document.getElementById('textbookPages').textContent = `${chapterTopic} (Punjab Textbook Board)`;
+                
+                const suppMaterialsList = document.getElementById('supplementaryMaterials');
+                suppMaterialsList.innerHTML = '';
+                (subjectResources[subject] || []).forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    suppMaterialsList.appendChild(li);
+                });
+                
+                const visualAidsList = document.getElementById('visualAids');
+                visualAidsList.innerHTML = '';
+                (visualAids[subject] || []).forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    visualAidsList.appendChild(li);
+                });
+                
+                // Lesson flow
+                const lessonFlowTable = document.getElementById('lessonFlow');
+                lessonFlowTable.innerHTML = '';
+                
+                // Get detailed lecture content
+                let lectureDetails = "";
+                if (lectureContent[subject] && lectureContent[subject][classLevel] && lectureContent[subject][classLevel][topic]) {
+                    lectureDetails = lectureContent[subject][classLevel][topic];
+                } else {
+                    lectureDetails = `Explain ${topic} using Punjab Textbook Board content, with interactive questioning and local context integration`;
+                }
+                
+                const activities = [
+                    {
+                        time: '5 min',
+                        activity: 'Starter Activity',
+                        details: `Engage students with a real-life example of ${topic} from Punjab (e.g., ${getLocalExample(subject, topic)})`
+                    },
+                    {
+                        time: '15 min',
+                        activity: 'Direct Instruction',
+                        details: lectureDetails
+                    },
+                    {
+                        time: '10 min',
+                        activity: 'Guided Practice',
+                        details: `Students work in pairs to solve problems related to ${topic} using Punjab-specific scenarios`
+                    },
+                    {
+                        time: '5 min',
+                        activity: 'Formative Assessment',
+                        details: `Exit ticket: "How does ${topic} relate to your daily life in Punjab?"`
+                    },
+                    {
+                        time: '5 min',
+                        activity: 'Wrap-up',
+                        details: `Summarize key points and connect ${topic} to Punjab's culture/development`
+                    }
+                ];
+                
+                activities.forEach(act => {
+                    const row = document.createElement('tr');
+                    
+                    const timeCell = document.createElement('td');
+                    timeCell.textContent = act.time;
+                    row.appendChild(timeCell);
+                    
+                    const activityCell = document.createElement('td');
+                    activityCell.textContent = act.activity;
+                    row.appendChild(activityCell);
+                    
+                    const detailsCell = document.createElement('td');
+                    detailsCell.textContent = act.details;
+                    row.appendChild(detailsCell);
+                    
+                    lessonFlowTable.appendChild(row);
+                });
+                
+                // Assessment
+                document.getElementById('formativeAssessment').textContent = 
+                    `Observation during activities, Think-pair-share on ${topic}, Quick quizzes with local context questions`;
+                document.getElementById('summativeAssessment').textContent = 
+                    `End-of-chapter test from Punjab Textbook, Project applying ${topic} to Punjab context`;
+                
+                // Differentiation
+                document.getElementById('supportStrategies').textContent = 
+                    `Visual aids with local examples, Peer support groups, Simplified worksheets with Punjab context`;
+                document.getElementById('challengeStrategies').textContent = 
+                    `Open-ended problems about ${topic} in Punjab's development, Research projects on local applications`;
+                
+                // Homework
+                document.getElementById('textbookExercise').textContent = 
+                    `Punjab Textbook ${chapterTopic}, Exercises ${chapterNum}.1 to ${chapterNum}.3`;
+                document.getElementById('creativeExtension').textContent = 
+                    `Interview family/community members about ${topic} in daily life, Create a poster showing ${topic} in Punjab context`;
+                
+                // Special requirements
+                document.getElementById('criticalThinkingQuestion').textContent = 
+                    `How would daily life in Punjab change if ${topic} was different? What are the local implications?`;
+                document.getElementById('crossCurricularLink').textContent = 
+                    crossSubjects[subject] || 'Connections to Punjab arts and culture';
+                document.getElementById('localContext').textContent = 
+                    `${localContexts[subject] || 'cultural practices'}. Specific example: ${getLocalExample(subject, topic)}`;
+                
+                // Show the output
+                document.getElementById('lessonPlanOutput').style.display = 'block';
+                
+                // Convert to Urdu if subject is Urdu or Islamiat
+                if (subject === "Urdu" || subject === "Islamiat") {
+                    convertToUrdu();
+                }
+            }
+            
+            function convertToUrdu() {
+                // Convert output elements to Urdu
+                const elementsToConvert = [
+                    "lessonTitle", "gradeLevel", "learningObjectives", 
+                    "textbookPages", "supplementaryMaterials", "visualAids",
+                    "formativeAssessment", "summativeAssessment",
+                    "supportStrategies", "challengeStrategies",
+                    "textbookExercise", "creativeExtension",
+                    "criticalThinkingQuestion", "crossCurricularLink", "localContext"
+                ];
+                
+                const urduTranslations = {
+                    "Grade Level": "جماعت",
+                    "Duration": "مدت",
+                    "Curriculum": "نصاب",
+                    "Alignment": "ہم آہنگی",
+                    "Learning Objectives": "تعلیمی مقاصد",
+                    "Resources Needed": "درکار وسائل",
+                    "Textbook Pages": "درسی کتاب کے صفحات",
+                    "Supplementary Materials": "معاون مواد",
+                    "Visual Aids": "دیداری معاونت",
+                    "Lesson Flow": "سبق کا بہاؤ",
+                    "Time": "وقت",
+                    "Activity": "سرگرمی",
+                    "Details": "تفصیلات",
+                    "Assessment": "تشخیص",
+                    "Formative": "تشکیلی",
+                    "Summative": "مجموعی",
+                    "Differentiation": "تفریق",
+                    "Support": "مدد",
+                    "Challenge": "چیلنج",
+                    "Homework": "گھر کا کام",
+                    "Textbook Exercise": "درسی کتاب کی مشق",
+                    "Creative Extension": "تخلیقی توسیع",
+                    "Special Requirements": "خصوصی تقاضے",
+                    "Critical Thinking Question": "تنقیدی سوچ کا سوال",
+                    "Cross-Curricular Link": "بین المضامین ربط",
+                    "Local Context (Punjab)": "مقامی تناظر (پنجاب)",
+                    "Starter Activity": "ابتدائی سرگرمی",
+                    "Direct Instruction": "براہ راست ہدایات",
+                    "Guided Practice": "رہنمائی شدہ مشق",
+                    "Formative Assessment": "تشکیلی تشخیص",
+                    "Wrap-up": "اختتامیہ"
+                };
+                
+                // Update table headers
+                const thElements = document.querySelectorAll('.activity-table th');
+                thElements.forEach(th => {
+                    if (urduTranslations[th.textContent]) {
+                        th.textContent = urduTranslations[th.textContent];
+                    }
+                });
+                
+                // Update other elements
+                elementsToConvert.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element && urduTranslations[element.textContent]) {
+                        element.textContent = urduTranslations[element.textContent];
+                    }
+                });
+                
+                // Update section headings
+                const h3Elements = document.querySelectorAll('.output-section h3, .special-requirements h3');
+                h3Elements.forEach(h3 => {
+                    if (urduTranslations[h3.textContent]) {
+                        h3.textContent = urduTranslations[h3.textContent];
+                    }
+                });
+            }
+            
+            function getLocalExample(subject, topic) {
+                const examples = {
+                    Math: `using ${topic} in Punjab's agricultural calculations (e.g., land measurement, crop yields)`,
+                    Science: `studying ${topic} in Punjab's ecosystem (e.g., local plants, weather patterns)`,
+                    Urdu: `analyzing ${topic} in Punjabi poetry (e.g., works by Bulleh Shah, Waris Shah)`,
+                    English: `translating ${topic} between English and local languages (e.g., Punjabi proverbs)`,
+                    "Social Studies": `examining ${topic} in Punjab's history (e.g., Mughal era, British period)`,
+                    Islamiat: `applying ${topic} in Punjab's Islamic practices (e.g., local mosque traditions)`
+                };
+                return examples[subject] || `local example of ${topic} (e.g., from Lahore, Multan, or rural Punjab)`;
+            }
+            
+            function printLessonPlan() {
+                window.print();
+            }
+        });
+    </script>
+</body>
+</html>
